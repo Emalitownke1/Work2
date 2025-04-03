@@ -31,8 +31,17 @@ async function fetchAdamsUrl() {
     console.error('Fatal Error:', {
       message: error.message,
       stack: error.stack,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      type: error.name,
+      code: error.code || 'UNKNOWN'
     });
+
+    // Attempt to recover or gracefully shutdown
+    if (error.code === 'MODULE_NOT_FOUND') {
+      console.error('Missing required module. Please check your dependencies.');
+    } else if (error.code === 'ECONNREFUSED') {
+      console.error('Connection refused. Please check your network connection.');
+    }
   }
 }
 
