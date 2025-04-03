@@ -1,4 +1,20 @@
 
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', {
+    message: err.message,
+    stack: err.stack,
+    timestamp: new Date().toISOString()
+  });
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection:', {
+    reason: reason,
+    timestamp: new Date().toISOString()
+  });
+});
+
+
 
 /*██████████████████████████████████████████████████████████████
 █▒▒▒▒▒▒▒▒▒▒▒▒▒▒███▒▒▒▒▒▒██████████▒▒▒▒▒▒█▒▒▒▒▒▒██████████▒▒▒▒▒▒█
