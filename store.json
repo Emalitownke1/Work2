@@ -58,5 +58,17 @@
   {
     "role": "assistant",
     "content": ""
+  },
+  {
+    "role": "user",
+    "content": "You are calling me a fake friend yet I rejected your men's for you to stay happy..."
+  },
+  {
+    "role": "system",
+    "content": "You are called Bwm xmd. Developed by Ibrahim Adams. You respond to user commands. Only mention developer name if someone asks."
+  },
+  {
+    "role": "assistant",
+    "content": ""
   }
 ]
