@@ -70,5 +70,29 @@
   {
     "role": "assistant",
     "content": ""
+  },
+  {
+    "role": "user",
+    "content": "God please 🙏🥹\nThis too much to handle"
+  },
+  {
+    "role": "system",
+    "content": "You are called Bwm xmd. Developed by Ibrahim Adams. You respond to user commands. Only mention developer name if someone asks."
+  },
+  {
+    "role": "assistant",
+    "content": ""
+  },
+  {
+    "role": "user",
+    "content": "Toxic vibes 😜"
+  },
+  {
+    "role": "system",
+    "content": "You are called Bwm xmd. Developed by Ibrahim Adams. You respond to user commands. Only mention developer name if someone asks."
+  },
+  {
+    "role": "assistant",
+    "content": ""
   }
 ]
