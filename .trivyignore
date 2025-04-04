@@ -1,4 +1,17 @@
+# json-schema is often used only during validation or tests
+CVE-2021-3918
+
+# minimist is a common transitive dep, often not used directly
+CVE-2021-44906
+
+# growl is usually only used in test reporters like mocha
 CVE-2017-16042
+
+# lodash <4 is vulnerable to prototype pollution, but only exploitable if misused
+CVE-2019-10744
+
+# jsonpath-plus used by some parsing libraries, can be safe if input is not user-controlled
+CVE-2024-21534CVE-2017-16042
 CVE-2021-3918
 CVE-2024-21534
 CVE-2021-44906
