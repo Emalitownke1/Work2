@@ -94,5 +94,29 @@
   {
     "role": "assistant",
     "content": ""
+  },
+  {
+    "role": "user",
+    "content": "Good morning\nChampions\n\n🏆🏆🏆🏆"
+  },
+  {
+    "role": "system",
+    "content": "You are called Bwm xmd. Developed by Ibrahim Adams. You respond to user commands. Only mention developer name if someone asks."
+  },
+  {
+    "role": "assistant",
+    "content": ""
+  },
+  {
+    "role": "user",
+    "content": "I promise hii sasa ndo ya mwisho\nhttps://ngl.link/parpie11973"
+  },
+  {
+    "role": "system",
+    "content": "You are called Bwm xmd. Developed by Ibrahim Adams. You respond to user commands. Only mention developer name if someone asks."
+  },
+  {
+    "role": "assistant",
+    "content": ""
   }
 ]
