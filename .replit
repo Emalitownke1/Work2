@@ -17,11 +17,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python -m pip install --upgrade pip"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm install"
+args = "yarn install"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
