@@ -11,6 +11,17 @@ const cheerio = require('cheerio');
 require('events').EventEmitter.defaultMaxListeners = 25;
 const adams = require(__dirname + "/config");
 
+// Configure port for scale-to-zero support
+const PORT = process.env.PORT || 8080;
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('BWM XMD Bot Server Running\n');
+});
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 // Keep-alive ping every 5 minutes
 setInterval(() => {
   if (global.xmd && global.xmd.user) {
