@@ -8,6 +8,7 @@
 
 const axios = require('axios');
 const cheerio = require('cheerio');
+require('events').EventEmitter.defaultMaxListeners = 25;
 const adams = require(__dirname + "/config");
 
 async function fetchAdamsUrl() {
