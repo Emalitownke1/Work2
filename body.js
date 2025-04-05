@@ -17,7 +17,7 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
-// Basic health check endpoint
+// Health check endpoints for scale-to-zero
 app.get('/', (req, res) => {
   res.status(200).send('BWM XMD Bot Status: Online');
 });
@@ -33,7 +33,14 @@ app.get('/health', (req, res) => {
   res.status(200).json(status);
 });
 
-const PORT = process.env.PORT || 8080;
+// Ready check for scale-to-zero
+app.get('/ready', (req, res) => {
+  if (global.xmd && global.xmd.user) {
+    res.status(200).json({ ready: true });
+  } else {
+    res.status(503).json({ ready: false });
+  }
+});
 const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`BWM XMD Bot Server running on port ${PORT}`);
