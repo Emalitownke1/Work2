@@ -14,10 +14,23 @@ const adams = require(__dirname + "/config");
 // Configure port for scale-to-zero support
 const PORT = process.env.PORT || 8080;
 const http = require('http');
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('BWM XMD Bot Server Running\n');
+const express = require('express');
+const app = express();
+
+// Basic health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).send('BWM XMD Bot Server Running');
 });
+
+app.get('/health', (req, res) => {
+  if (global.xmd && global.xmd.user) {
+    res.status(200).send({ status: 'healthy', connected: true });
+  } else {
+    res.status(503).send({ status: 'unhealthy', connected: false });
+  }
+});
+
+const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
