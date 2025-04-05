@@ -11,6 +11,13 @@ const cheerio = require('cheerio');
 require('events').EventEmitter.defaultMaxListeners = 25;
 const adams = require(__dirname + "/config");
 
+// Keep-alive ping every 5 minutes
+setInterval(() => {
+  if (global.xmd && global.xmd.user) {
+    console.log("Bot connection active");
+  }
+}, 300000);
+
 // Add keep-alive ping to prevent premature scaling to zero
 setInterval(() => {
   if (global.xmd && global.xmd.user) {
