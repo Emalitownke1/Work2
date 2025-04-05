@@ -22,3 +22,7 @@ args = "yarn install "
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "node body.js"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
