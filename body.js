@@ -33,6 +33,7 @@ app.get('/health', (req, res) => {
   res.status(200).json(status);
 });
 
+const PORT = process.env.PORT || 8080;
 const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`BWM XMD Bot Server running on port ${PORT}`);

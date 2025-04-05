@@ -4,8 +4,12 @@ run = "node index.js"
 [nix]
 channel = "stable-24_05"
 
+[env]
+REPLIT_DISABLE_PACKAGE_LAYER = "1"
+
 [deployment]
 run = ["sh", "-c", "node body.js"]
+build = ["sh", "-c", "yarn install --network-timeout 1000000"]
 
 [workflows]
 runButton = "Run Bot"
