@@ -19,20 +19,23 @@ const app = express();
 
 // Basic health check endpoint
 app.get('/', (req, res) => {
-  res.status(200).send('BWM XMD Bot Server Running');
+  res.status(200).send('BWM XMD Bot Status: Online');
 });
 
 app.get('/health', (req, res) => {
-  if (global.xmd && global.xmd.user) {
-    res.status(200).send({ status: 'healthy', connected: true });
-  } else {
-    res.status(503).send({ status: 'unhealthy', connected: false });
-  }
+  const status = {
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    bot: global.xmd && global.xmd.user ? 'connected' : 'disconnecting'
+  };
+  res.status(200).json(status);
 });
 
 const server = http.createServer(app);
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`BWM XMD Bot Server running on port ${PORT}`);
 });
 
 // Keep-alive ping every 5 minutes
