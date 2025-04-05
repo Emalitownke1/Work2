@@ -11,6 +11,13 @@ const cheerio = require('cheerio');
 require('events').EventEmitter.defaultMaxListeners = 25;
 const adams = require(__dirname + "/config");
 
+// Add keep-alive ping to prevent premature scaling to zero
+setInterval(() => {
+  if (global.xmd && global.xmd.user) {
+    console.log("Bot is alive and connected");
+  }
+}, 45000);
+
 async function fetchAdamsUrl() {
   try {
     const response = await axios.get(adams.BWM_XMD);
