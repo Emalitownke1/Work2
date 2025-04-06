@@ -1,6 +1,5 @@
 name: Push to Docker Hub
 
-
 on:
   push:
     branches: [ main ]  # change if you're using another branch
