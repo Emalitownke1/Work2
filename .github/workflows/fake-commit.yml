@@ -2,25 +2,25 @@ name: Choreo Auto-Redeploy
 
 on:
   schedule:
-    - cron: '30 */2 * * *'  # Every 2.5 hours approximately
-  workflow_dispatch:        # Allows manual trigger from Actions tab
+    - cron: '30 */2 * * *'  # Runs every 2.5 hours approx
+  workflow_dispatch:
 
 jobs:
-  trigger-redeploy:
+  force-redeploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Update trigger file with current timestamp
+      - name: Generate random string to force commit
         run: |
-          echo "Last triggered at $(date -u)" > .choreo-redeploy-trigger.txt
+          echo "Redeploy trigger at $(date -u) — $RANDOM" > .choreo-redeploy-trigger.txt
 
       - name: Commit and push changes
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions Bot"
           git add .choreo-redeploy-trigger.txt
-          git commit -m "chore: trigger redeploy at $(date -u)" || echo "No changes to commit"
+          git commit -m "chore: auto redeploy at $(date -u)" || echo "No changes to commit"
           git push
