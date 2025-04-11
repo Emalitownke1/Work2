@@ -2,6 +2,11 @@
 const { adams } = require('../Ibrahim/adams');
 const { addAntiVO, isAntiVO, removeAntiVO } = require("../lib/antiviewonce");
 
+module.exports = {
+    nomCom: "antiviewonce",
+    categorie: "Group"
+};
+
 adams({
     nomCom: 'antiviewonce',
     categorie: 'Group',

@@ -2,6 +2,11 @@
 const { adams } = require('../Ibrahim/adams');
 const {addAntidelete, isAntiDelete, removeAntidelete} = require("../lib/antidelete");
 
+module.exports = {
+    nomCom: "antidelete",
+    categorie: "Group"
+};
+
 adams({
     nomCom: 'antidelete',
     categorie: 'Group',
