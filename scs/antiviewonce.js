@@ -9,10 +9,7 @@ adams({
 }, async (dest, zk, commandeOptions) => {
     const { arg, repondre, verifGroupe, verifAdmin, superUser } = commandeOptions;
 
-    if (!verifGroupe) { 
-        repondre("This command is only for groups"); 
-        return; 
-    }
+    // Allow command in both groups and private chats
 
     if (!verifAdmin && !superUser) {
         repondre("This command is only for admins");
