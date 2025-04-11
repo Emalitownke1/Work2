@@ -1,6 +1,6 @@
 
 const { adams } = require('../Ibrahim/adams');
-const {addAntidelete, isAntiDelete, removeAntidelete} = require("../lib/antidelete");
+const { addAntidelete, isAntiDelete, removeAntidelete } = require("../lib/antidelete");
 
 module.exports = {
     nomCom: "antidelete",
@@ -10,40 +10,42 @@ module.exports = {
 adams({
     nomCom: 'antidelete',
     categorie: 'Group',
-    reaction: "🔄"
+    reaction: "🗑️",
+    desc: "Enable/disable anti-delete message feature"
 }, async (dest, zk, commandeOptions) => {
-    const { arg, repondre, verifGroupe, verifAdmin, superUser } = commandeOptions;
+    const { arg, repondre, groupName } = commandeOptions;
 
-    if (!verifGroupe) { 
-        repondre("This command is only for groups"); 
-        return; 
-    }
-
-    if (!verifAdmin && !superUser) {
-        repondre("This command is only for admins");
-        return;
-    }
+    let menu = `╭───────────────◆
+│ *ANTI-DELETE MENU*
+│ Current Status: ${await isAntiDelete(dest) ? '✅ ON' : '❌ OFF'}
+│
+│ Usage:
+│ .antidelete on
+│ .antidelete off
+╰────────────◆`;
 
     if (!arg[0]) {
-        repondre("Use 'on' to enable antidelete\nUse 'off' to disable antidelete");
-        return;
+        return repondre(menu);
     }
 
-    if (arg[0] === "on") {
-        if (await isAntiDelete(dest)) {
-            repondre("Antidelete is already enabled in this group");
-            return;
-        }
-        await addAntidelete(dest);
-        repondre("Antidelete has been enabled. Deleted messages will be resent.");
-    } else if (arg[0] === "off") {
-        if (!await isAntiDelete(dest)) {
-            repondre("Antidelete is already disabled in this group");
-            return;
-        }
-        await removeAntidelete(dest);
-        repondre("Antidelete has been disabled");
-    } else {
-        repondre("Invalid option. Use 'on' to enable or 'off' to disable");
+    switch (arg[0].toLowerCase()) {
+        case 'on':
+            if (await isAntiDelete(dest)) {
+                repondre('Anti-delete is already enabled');
+            } else {
+                await addAntidelete(dest);
+                repondre('✅ Anti-delete has been enabled');
+            }
+            break;
+        case 'off':
+            if (!await isAntiDelete(dest)) {
+                repondre('Anti-delete is already disabled');
+            } else {
+                await removeAntidelete(dest);
+                repondre('❌ Anti-delete has been disabled');
+            }
+            break;
+        default:
+            repondre(menu);
     }
 });
