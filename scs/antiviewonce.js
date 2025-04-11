@@ -1,5 +1,5 @@
-const { adams } = require('../Ibrahim/adams');
-const { addAntiVO, isAntiVO, removeAntiVO } = require("../lib/antiviewonce");
+const {adams} = require('../Ibrahim/adams');
+const {addAntiVO, isAntiVO, removeAntiVO} = require("../lib/antiviewonce");
 
 module.exports = {
     nomCom: "antiviewonce",
@@ -10,42 +10,25 @@ module.exports = {
 adams({
     nomCom: "antiviewonce",
     categorie: "Group",
-    desc: "Enable/disable anti-viewonce feature in groups",
+    desc: "Enable/disable anti-viewonce message feature",
     reaction: "👁️"
 }, async (dest, zk, commandeOptions) => {
-    const { arg, repondre, groupName } = commandeOptions;
+    const { arg, repondre, verifAdmin, superUser, groupName } = commandeOptions;
 
-    let menu = `╭───────────────◆
-│ *ANTI-VIEWONCE MENU*
-│ Current Status: ${await isAntiVO(dest) ? '✅ ON' : '❌ OFF'}
-│
-│ Usage:
-│ .antiviewonce on
-│ .antiviewonce off
-╰────────────◆`;
+    if (!verifAdmin && !superUser) { repondre("This command is only for admins"); return; }
 
     if (!arg[0]) {
-        return repondre(menu);
+        repondre(`*Anti-ViewOnce Status*\n\nType on/off to control anti-viewonce feature`);
+        return;
     }
 
-    switch (arg[0].toLowerCase()) {
-        case 'on':
-            if (await isAntiVO(dest)) {
-                repondre('Anti-viewonce is already enabled');
-            } else {
-                await addAntiVO(dest);
-                repondre('✅ Anti-viewonce has been enabled');
-            }
-            break;
-        case 'off':
-            if (!await isAntiVO(dest)) {
-                repondre('Anti-viewonce is already disabled');
-            } else {
-                await removeAntiVO(dest);
-                repondre('❌ Anti-viewonce has been disabled');
-            }
-            break;
-        default:
-            repondre(menu);
+    if (arg.join(' ').toLowerCase() === 'on') {
+        await addAntiVO(dest);
+        repondre('Anti-ViewOnce has been enabled. View-once media will be converted to normal media.');
+    } else if (arg.join(' ').toLowerCase() === 'off') {
+        await removeAntiVO(dest);
+        repondre('Anti-ViewOnce has been disabled');
+    } else {
+        repondre('*Invalid option*\nUse on/off only');
     }
 });
