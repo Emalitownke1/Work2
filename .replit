@@ -1,3 +1,5 @@
+run = "node index.js"
+modules = ["nodejs-20", "web"]
 
 [[ports]]
 localPort = 8080
@@ -13,8 +15,7 @@ channel = "stable-24_05"
 REPLIT_DISABLE_PACKAGE_LAYER = "1"
 
 [deployment]
-run = ["sh", "-c", "node body.js"]
-build = ["sh", "-c", "yarn install --network-timeout 1000000"]
+run = ["sh", "-c", "node index.js"]
 
 [workflows]
 runButton = "Run Bot"
