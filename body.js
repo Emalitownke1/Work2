@@ -46,35 +46,49 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`BWM XMD Bot Server running on port ${PORT}`);
 });
 
-// Connection monitoring and keep-alive system
+// Enhanced connection monitoring system
 let connectionRetries = 0;
-const maxRetries = 5;
+const maxRetries = 10;
+let isConnected = false;
 
 const checkConnection = async () => {
   try {
-    if (global.xmd && global.xmd.user) {
-      console.log("❒────────────━⊷\n║ʙᴡᴍ xᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ\n╰────────────━⊷");
-      connectionRetries = 0; // Reset retries on successful connection
+    if (global.xmd && global.xmd.user && global.xmd.ws.readyState === global.xmd.ws.OPEN) {
+      if (!isConnected) {
+        console.log("╭────────────━⊷\n║ʙᴡᴍ xᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ\n╰────────────━⊷");
+        isConnected = true;
+      }
+      connectionRetries = 0;
     } else {
+      isConnected = false;
       connectionRetries++;
-      console.log(`Connection attempt ${connectionRetries}/${maxRetries}`);
       
       if (connectionRetries >= maxRetries) {
-        console.log("Attempting to reconnect...");
-        // Trigger reconnection logic
-        if (global.xmd) {
-          await global.xmd.connect();
+        console.log("Attempting to re-establish connection...");
+        try {
+          if (global.xmd) {
+            await global.xmd.logout();
+            await global.xmd.connect();
+          }
+        } catch (reconnectError) {
+          console.error("Reconnection failed:", reconnectError);
         }
         connectionRetries = 0;
       }
     }
   } catch (error) {
-    console.error("Connection check error:", error);
+    console.error("Connection monitor error:", error);
   }
 };
 
-// Check connection status every 30 seconds
-setInterval(checkConnection, 30000);
+// Check connection status every 15 seconds
+setInterval(checkConnection, 15000);
+
+// Handle unexpected disconnections
+global.xmd?.ws?.on('close', () => {
+  isConnected = false;
+  console.log("Connection closed, monitoring for reconnection...");
+});
 
 // Keep-alive ping every 2 minutes
 setInterval(() => {
