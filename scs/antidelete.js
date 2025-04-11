@@ -1,17 +1,16 @@
-
 const { adams } = require('../Ibrahim/adams');
-const { addAntidelete, isAntiDelete, removeAntidelete } = require("../lib/antidelete");
 
 module.exports = {
     nomCom: "antidelete",
-    categorie: "Group"
+    categorie: "Group",
+    desc: "Enable/disable anti-delete feature in groups"
 };
 
 adams({
-    nomCom: 'antidelete',
-    categorie: 'Group',
-    reaction: "🗑️",
-    desc: "Enable/disable anti-delete message feature"
+    nomCom: "antidelete",
+    categorie: "Group",
+    desc: "Enable/disable anti-delete feature in groups",
+    reaction: "🗑️"
 }, async (dest, zk, commandeOptions) => {
     const { arg, repondre, groupName } = commandeOptions;
 

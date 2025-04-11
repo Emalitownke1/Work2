@@ -1,17 +1,17 @@
-
 const { adams } = require('../Ibrahim/adams');
 const { addAntiVO, isAntiVO, removeAntiVO } = require("../lib/antiviewonce");
 
 module.exports = {
     nomCom: "antiviewonce",
-    categorie: "Group"
+    categorie: "Group",
+    desc: "Enable/disable anti-viewonce feature in groups"
 };
 
 adams({
-    nomCom: 'antiviewonce',
-    categorie: 'Group',
-    reaction: "👁️",
-    desc: "Enable/disable anti-viewonce message feature"
+    nomCom: "antiviewonce",
+    categorie: "Group",
+    desc: "Enable/disable anti-viewonce feature in groups",
+    reaction: "👁️"
 }, async (dest, zk, commandeOptions) => {
     const { arg, repondre, groupName } = commandeOptions;
 
