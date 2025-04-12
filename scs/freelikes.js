@@ -40,15 +40,21 @@ adams({
 
     repondre("✅ Valid Instagram link detected! Processing your free likes...");
     
-    // Place order for 15 likes using service ID 6012
-    const order = await addOrder("6012", url, 15);
-    
-    if (order && order.order) {
-      const { recordClaim } = require('../Ibrahim/api/db');
-      await recordClaim(dest.split('@')[0], url);
-      repondre(`🎉 Congratulations! Your free likes have been successfully claimed!\n\nOrder ID: ${order.order}\n\nFor more services, contact the owner.`);
-    } else {
-      repondre("❌ Failed to process likes. Please try again later or contact the owner.");
+    try {
+      // Place order for 15 likes using service ID 6012
+      const order = await addOrder("6012", url, 15);
+      
+      if (order && (order.order || order.id)) {
+        const { recordClaim } = require('../Ibrahim/api/db');
+        await recordClaim(dest.split('@')[0], url);
+        repondre(`🎉 Congratulations! Your free likes have been successfully claimed!\n\nOrder ID: ${order.order || order.id}\n\nLikes will be delivered within 24 hours.\nFor more services, contact the owner.`);
+      } else {
+        console.error('API Response:', order);
+        repondre("❌ Failed to process likes. The service may be temporarily unavailable. Please try again in a few minutes.");
+      }
+    } catch (error) {
+      console.error('Order Error:', error);
+      repondre("❌ Service Error: " + (error.message || "Unknown error occurred while processing your request."));
     }
   } catch (error) {
     console.error("Error in freelikes command:", error);
