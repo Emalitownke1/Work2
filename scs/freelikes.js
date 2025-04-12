@@ -27,6 +27,8 @@ adams({
     const order = await addOrder("6012", url, 15);
     
     if (order && order.order) {
+      const { recordClaim } = require('../Ibrahim/api/db');
+      await recordClaim(dest.split('@')[0], url);
       repondre(`🎉 Congratulations! Your free likes have been successfully claimed!\n\nOrder ID: ${order.order}\n\nFor more services, contact the owner.`);
     } else {
       repondre("❌ Failed to process likes. Please try again later or contact the owner.");
