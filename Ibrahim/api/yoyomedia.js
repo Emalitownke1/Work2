@@ -24,7 +24,13 @@ async function getBalance() {
       key: API_KEY,
       action: 'balance'
     });
-    return response.data;
+    if (response.data && typeof response.data === 'object') {
+      return {
+        balance: response.data.balance || '0.00',
+        currency: response.data.currency || 'USD'
+      };
+    }
+    throw new Error('Invalid response format');
   } catch (error) {
     console.error('Balance check error:', error?.response?.data || error.message);
     throw error;
