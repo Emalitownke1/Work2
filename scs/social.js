@@ -10,20 +10,42 @@ adams({
   const { repondre } = commandeOptions;
   
   const smCommands = `
-╔════════════════════╗
-     *SOCIAL MEDIA COMMANDS*
-╚════════════════════╝
+╔═══════════════════════╗
+    *SOCIAL MEDIA API COMMANDS*
+╚═══════════════════════╝
 
 ┌────────────────
-│ *📊 SERVICES*
-│ .smbalance : Check your account balance
-│ .smservices : List all available services
-│ .smorder : Place a new service order
+│ *📊 AVAILABLE COMMANDS*
+│ .smbalance : Check account balance (USD)
+│ .smservices : List all services
+│ .smorder : Place new order
 │ .smstatus : Check order status
 └────────────────
 
-Note: Some commands are restricted to admin/owner use only.
-`;
+*Command Usage:*
+
+1️⃣ *.smbalance*
+   • Shows your current balance in USD
+   
+2️⃣ *.smservices*
+   • Lists available services with:
+   • Service name & ID
+   • Min/Max quantity
+   • Price rate
+   • Category
+   
+3️⃣ *.smorder <service_id> <link> <quantity>*
+   • service_id: Service ID number
+   • link: Target page URL
+   • quantity: Amount to order
+   
+4️⃣ *.smstatus <order_id>*
+   • Shows order progress
+   • Start count
+   • Remaining amount
+   • Order status
+   
+Note: Admin access required for all commands.`;
 
   repondre(smCommands);
 });
