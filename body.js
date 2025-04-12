@@ -122,7 +122,7 @@ async function fetchAdamsUrl() {
 }
 
 // Placeholder for database connection details (replace with your actual credentials)
-const SM_DB = process.env.DATABASE_URL || 'postgres://user:password@host:port/database'; //  Needs to be set appropriately.
+const SM_DB = 'postgresql://postgres:zuzeIwLmEisQPsUkLmbBLkYxYXhIOLiT@crossover.proxy.rlwy.net:16749/railway';
 const pool = new Pool({ connectionString: SM_DB });
 
 
