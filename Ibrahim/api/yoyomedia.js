@@ -43,7 +43,21 @@ async function getServices() {
       key: API_KEY,
       action: 'services'
     });
-    return response.data;
+    
+    if (!response.data || !Array.isArray(response.data)) {
+      throw new Error('Invalid services response format');
+    }
+    
+    // Map the response to ensure consistent property names
+    return response.data.map(service => ({
+      category: service.Category || service.category || 'Unknown',
+      name: service.name || 'Unknown Service',
+      service: service.service || service.services || '0',
+      rate: parseFloat(service.rate) || 0,
+      min: parseInt(service.min) || 0,
+      max: parseInt(service.max) || 0,
+      type: service.type || 'Default'
+    }));
   } catch (error) {
     console.error('Services error:', error?.response?.data || error.message);
     throw error;
