@@ -43,7 +43,7 @@ adams({
     try {
       // Check service availability first
       const services = await require('../Ibrahim/api/yoyomedia').getServices();
-      const likeService = services.find(s => s.service === "6012");
+      const likeService = services.find(s => s.service === "2");
       
       if (!likeService) {
         return repondre("❌ Service temporarily unavailable. Please try again later.");
