@@ -6,16 +6,14 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { Pool } = require('pg'); // Added for PostgreSQL interaction
-const { initializeDatabase } = require('./Ibrahim/api/db'); // Assuming this file will contain DB setup
 
 // Function to clear session data
 function clearSessionData() {
   const sessionDir = path.join(__dirname, 'Session');
-
+  
   if (fs.existsSync(sessionDir)) {
     const files = fs.readdirSync(sessionDir);
-
+    
     for (const file of files) {
       if (file !== 'creds.json') { // Preserve credentials file
         const filePath = path.join(sessionDir, file);
@@ -121,28 +119,4 @@ async function fetchAdamsUrl() {
   }
 }
 
-// Placeholder for database connection details (replace with your actual credentials)
-const SM_DB = process.env.DATABASE_URL || 'postgres://user:password@host:port/database'; //  Needs to be set appropriately.
-const pool = new Pool({ connectionString: SM_DB });
-
-
-async function initializeDatabase() {
-    try {
-        await pool.query(`CREATE TABLE IF NOT EXISTS claims (
-            user_id TEXT NOT NULL,
-            link TEXT NOT NULL,
-            claim_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );`);
-        console.log('Database initialized successfully.');
-    } catch (error) {
-        console.error('Error initializing database:', error);
-    }
-}
-
-
-async function startBwm() {
-  await initializeDatabase();
-  fetchAdamsUrl();
-}
-
-startBwm();
+fetchAdamsUrl();
