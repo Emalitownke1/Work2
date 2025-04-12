@@ -46,56 +46,19 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`BWM XMD Bot Server running on port ${PORT}`);
 });
 
-// Enhanced connection monitoring system
-let connectionRetries = 0;
-const maxRetries = 10;
-let isConnected = false;
-
-const checkConnection = async () => {
-  try {
-    if (global.xmd && global.xmd.user && global.xmd.ws.readyState === global.xmd.ws.OPEN) {
-      if (!isConnected) {
-        console.log("╭────────────━⊷\n║ʙᴡᴍ xᴍᴅ ᴄᴏɴɴᴇᴄᴛᴇᴅ\n╰────────────━⊷");
-        isConnected = true;
-      }
-      connectionRetries = 0;
-    } else {
-      isConnected = false;
-      connectionRetries++;
-      
-      if (connectionRetries >= maxRetries) {
-        console.log("Attempting to re-establish connection...");
-        try {
-          if (global.xmd) {
-            await global.xmd.logout();
-            await global.xmd.connect();
-          }
-        } catch (reconnectError) {
-          console.error("Reconnection failed:", reconnectError);
-        }
-        connectionRetries = 0;
-      }
-    }
-  } catch (error) {
-    console.error("Connection monitor error:", error);
-  }
-};
-
-// Check connection status every 15 seconds
-setInterval(checkConnection, 15000);
-
-// Handle unexpected disconnections
-global.xmd?.ws?.on('close', () => {
-  isConnected = false;
-  console.log("Connection closed, monitoring for reconnection...");
-});
-
-// Keep-alive ping every 2 minutes
+// Keep-alive ping every 5 minutes
 setInterval(() => {
   if (global.xmd && global.xmd.user) {
-    global.xmd.sendPresenceUpdate('available');
+    console.log("Bot connection active");
   }
-}, 120000);
+}, 300000);
+
+// Add keep-alive ping to prevent premature scaling to zero
+setInterval(() => {
+  if (global.xmd && global.xmd.user) {
+    console.log("Bot is alive and connected");
+  }
+}, 45000);
 
 async function fetchAdamsUrl() {
   try {
