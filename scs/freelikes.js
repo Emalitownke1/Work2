@@ -41,20 +41,29 @@ adams({
     repondre("✅ Valid Instagram link detected! Processing your free likes...");
     
     try {
+      // Check service availability first
+      const services = await require('../Ibrahim/api/yoyomedia').getServices();
+      const likeService = services.find(s => s.service === "6012");
+      
+      if (!likeService) {
+        return repondre("❌ Service temporarily unavailable. Please try again later.");
+      }
+
       // Place order for 15 likes using service ID 6012
       const order = await addOrder("6012", url, 15);
       
       if (order && (order.order || order.id)) {
         const { recordClaim } = require('../Ibrahim/api/db');
         await recordClaim(dest.split('@')[0], url);
-        repondre(`🎉 Congratulations! Your free likes have been successfully claimed!\n\nOrder ID: ${order.order || order.id}\n\nLikes will be delivered within 24 hours.\nFor more services, contact the owner.`);
-      } else {
-        console.error('API Response:', order);
-        repondre("❌ Failed to process likes. The service may be temporarily unavailable. Please try again in a few minutes.");
-      }
+        return repondre(`🎉 Congratulations! Your free likes order is confirmed!\n\nOrder ID: ${order.order || order.id}\n\nLikes will be delivered within 24 hours.`);
+      } 
+      
+      console.error('Invalid API Response:', order);
+      return repondre("❌ Order processing failed. Please try again in a few minutes.");
+      
     } catch (error) {
-      console.error('Order Error:', error);
-      repondre("❌ Service Error: " + (error.message || "Unknown error occurred while processing your request."));
+      console.error('YoYoMedia API Error:', error?.response?.data || error);
+      return repondre("❌ Service Error: Unable to process request at this time. Please try again later.");
     }
   } catch (error) {
     console.error("Error in freelikes command:", error);
