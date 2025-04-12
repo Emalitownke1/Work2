@@ -1,9 +1,12 @@
 const axios = require('axios');
 
-const API_KEY = 'fec208398d31ad017dddebcb740dc49ce8495ad5801396b5b260ce25b0292eab'; // YoYoMedia API key
+const API_KEY = process.env.SM_API_KEY || ''; // YoYoMedia API key from environment secrets
 const API_URL = 'https://yoyomedia.in/api/v2';
 
 async function getBalance() {
+  if (!API_KEY) {
+    throw new Error('YoYoMedia API key not found in environment variables');
+  }
   try {
     const response = await axios.post(API_URL, {
       key: API_KEY,
