@@ -3,6 +3,32 @@ const { adams } = require("../Ibrahim/adams");
 const { getBalance, getServices, addOrder, getOrderStatus } = require("../Ibrahim/api/yoyomedia");
 
 adams({
+  nomCom: "smcmds",
+  categorie: "Social",
+  reaction: "📱"
+}, async (dest, zk, commandeOptions) => {
+  const { repondre } = commandeOptions;
+  
+  const smCommands = `
+╔════════════════════╗
+     *SOCIAL MEDIA COMMANDS*
+╚════════════════════╝
+
+┌────────────────
+│ *📊 SERVICES*
+│ .smbalance : Check your account balance
+│ .smservices : List all available services
+│ .smorder : Place a new service order
+│ .smstatus : Check order status
+└────────────────
+
+Note: Some commands are restricted to admin/owner use only.
+`;
+
+  repondre(smCommands);
+});
+
+adams({
   nomCom: "smbalance",
   categorie: "Social",
   reaction: "💰"
