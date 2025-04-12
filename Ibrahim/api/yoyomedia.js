@@ -28,8 +28,17 @@ async function getServices() {
       key: API_KEY, 
       action: 'services'
     });
-    if (response.data && typeof response.data === 'object') {
-      return Object.values(response.data);
+    if (response.data) {
+      // Handle both array and object responses
+      const services = Array.isArray(response.data) ? response.data : Object.values(response.data);
+      return services.map(service => ({
+        name: service.name || service.Category + ' ' + service.services,
+        service: service.service || service.services,
+        rate: service.rate || 0,
+        min: service.min || '0',
+        max: service.max || '0',
+        category: service.Category || 'Unknown'
+      }));
     }
     return [];
   } catch (error) {
