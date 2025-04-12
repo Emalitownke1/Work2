@@ -62,14 +62,18 @@ adams({
 
   try {
     const services = await getServices();
-    let message = "Available Services:\n\n";
-    services.forEach(service => {
-      message += `*${service.name}*\n`;
-      message += `ID: ${service.service}\n`;
-      message += `Rate: ${service.rate}\n`;
-      message += `Min: ${service.min}\n`;
-      message += `Max: ${service.max}\n\n`;
-    });
+    let message = "📋 *Available Services*\n\n";
+    if (Array.isArray(services)) {
+      services.forEach(service => {
+        message += `🔸 *${service.name || 'Unknown'}*\n`;
+        message += `📌 ID: ${service.service || 'N/A'}\n`;
+        message += `💰 Rate: ${service.rate || '0'}\n`;
+        message += `⬇️ Min: ${service.min || '0'}\n`;
+        message += `⬆️ Max: ${service.max || '0'}\n\n`;
+      });
+    } else {
+      message += "No services available at the moment.";
+    }
     repondre(message);
   } catch (error) {
     repondre("Error fetching services: " + error.message);

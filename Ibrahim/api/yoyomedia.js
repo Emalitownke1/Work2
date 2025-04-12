@@ -28,7 +28,10 @@ async function getServices() {
       key: API_KEY, 
       action: 'services'
     });
-    return response.data;
+    if (response.data && typeof response.data === 'object') {
+      return Object.values(response.data);
+    }
+    return [];
   } catch (error) {
     console.error('Error getting services:', error);
     throw error;
