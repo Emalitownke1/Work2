@@ -28,17 +28,27 @@ async function getServices() {
       key: API_KEY, 
       action: 'services'
     });
+    
+    // Log raw response for debugging
+    console.log('Raw API response:', JSON.stringify(response.data, null, 2));
+    
     if (response.data) {
       // Handle both array and object responses
-      const services = Array.isArray(response.data) ? response.data : Object.values(response.data);
+      let services = [];
+      if (Array.isArray(response.data)) {
+        services = response.data;
+      } else if (typeof response.data === 'object') {
+        services = Object.values(response.data);
+      }
+      
       return services.map(service => ({
-        name: service.name || service.Category + ' ' + service.services,
-        service: service.service || service.services,
-        rate: service.rate || 0,
+        name: service.name || (service.Category ? `${service.Category} - ${service.services || ''}` : 'Unknown'),
+        service: service.service || service.services || 'N/A',
+        rate: parseFloat(service.rate) || 0,
         min: service.min || '0',
         max: service.max || '0',
         category: service.Category || 'Unknown'
-      }));
+      })).filter(service => service.name && service.service !== 'N/A');
     }
     return [];
   } catch (error) {
