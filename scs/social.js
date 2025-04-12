@@ -44,6 +44,12 @@ adams({
    • Start count
    • Remaining amount
    • Order status
+
+5️⃣ *.freelikes <instagram_post_url>*
+   • Claim free Instagram likes
+   • One-time use per user
+   • Valid Instagram post URL required
+   • 15 free likes per claim
    
 Note: Admin access required for all commands.`;
 
