@@ -81,30 +81,31 @@ adams({
   categorie: "Social",
   reaction: "📋"
 }, async (dest, zk, commandeOptions) => {
-  const { repondre, superUser } = commandeOptions;
-
-  if (!superUser) {
-    repondre('This command is only for the bot owner');
-    return;
-  }
+  const { repondre } = commandeOptions;
 
   try {
     const services = await getServices();
-    let message = "📋 *Available Services*\n\n";
+    let message = "📋 *AVAILABLE SERVICES*\n\n";
+    
     if (Array.isArray(services)) {
-      services.forEach(service => {
-        message += `🔸 *${service.name || 'Unknown'}*\n`;
-        message += `📌 ID: ${service.service || 'N/A'}\n`;
-        message += `💰 Rate: ${service.rate || '0'}\n`;
-        message += `⬇️ Min: ${service.min || '0'}\n`;
-        message += `⬆️ Max: ${service.max || '0'}\n\n`;
-      });
+      for (const service of services) {
+        message += `╔════════════════════\n`;
+        message += `║ 🔸 *${service.name || 'Unknown'}*\n`;
+        message += `║ 📌 Service ID: ${service.service || 'N/A'}\n`;
+        message += `║ 💰 Rate: $${service.rate || '0'}\n`;
+        message += `║ ⬇️ Min Order: ${service.min || '0'}\n`;
+        message += `║ ⬆️ Max Order: ${service.max || '0'}\n`;
+        message += `║ 📝 Category: ${service.category || 'N/A'}\n`;
+        message += `╚════════════════════\n\n`;
+      }
     } else {
-      message += "No services available at the moment.";
+      message += "❌ No services available at the moment.";
     }
+    
     repondre(message);
   } catch (error) {
-    repondre("Error fetching services: " + error.message);
+    console.error('Services Error:', error);
+    repondre("❌ Error fetching services. Please try again later.");
   }
 });
 
