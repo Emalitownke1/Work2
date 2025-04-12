@@ -1,7 +1,7 @@
 
 const axios = require('axios');
 
-const API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
+const API_KEY = process.env.SM_API_KEY || ''; // Get API key from environment variables
 const API_URL = 'https://yoyomedia.in/api/v2';
 
 async function getBalance() {
