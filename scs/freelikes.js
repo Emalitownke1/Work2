@@ -20,7 +20,24 @@ adams({
     return repondre("❌ Invalid Instagram URL. Please provide a valid Instagram post link.");
   }
 
+  const { Pool } = require('pg');
+  const pool = new Pool({
+    connectionString: process.env.SM_DB
+  });
+
   try {
+    // Check if user has already claimed
+    const userResult = await pool.query('SELECT * FROM freelikes_claims WHERE user_id = $1', [dest.split('@')[0]]);
+    if (userResult.rows.length > 0) {
+      return repondre("❌ You have already claimed your free likes. Each user can only claim once.");
+    }
+
+    // Check if link was already used
+    const linkResult = await pool.query('SELECT * FROM freelikes_claims WHERE instagram_link = $1', [url]);
+    if (linkResult.rows.length > 0) {
+      return repondre("❌ This Instagram post link has already been used. Each post can only receive likes once.");
+    }
+
     repondre("✅ Valid Instagram link detected! Processing your free likes...");
     
     // Place order for 15 likes using service ID 6012
