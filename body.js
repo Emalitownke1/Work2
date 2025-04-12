@@ -126,21 +126,11 @@ const SM_DB = process.env.DATABASE_URL || 'postgres://user:password@host:port/da
 const pool = new Pool({ connectionString: SM_DB });
 
 
-async function initializeDatabase() {
-    try {
-        await pool.query(`CREATE TABLE IF NOT EXISTS claims (
-            user_id TEXT NOT NULL,
-            link TEXT NOT NULL,
-            claim_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );`);
-        console.log('Database initialized successfully.');
-    } catch (error) {
-        console.error('Error initializing database:', error);
-    }
-}
+// Database initialization moved to Ibrahim/api/db.js
 
 
 async function startBwm() {
+  const { initializeDatabase } = require('./Ibrahim/api/db');
   await initializeDatabase();
   fetchAdamsUrl();
 }
