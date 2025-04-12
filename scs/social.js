@@ -7,7 +7,13 @@ adams({
   categorie: "Social",
   reaction: "💰"
 }, async (dest, zk, commandeOptions) => {
-  const { repondre } = commandeOptions;
+  const { repondre, superUser } = commandeOptions;
+  
+  if (!superUser) {
+    repondre('This command is only for the bot owner');
+    return;
+  }
+
   try {
     const balance = await getBalance();
     repondre(`Balance: ${balance.balance} ${balance.currency}`);
@@ -21,7 +27,13 @@ adams({
   categorie: "Social",
   reaction: "📋"
 }, async (dest, zk, commandeOptions) => {
-  const { repondre } = commandeOptions;
+  const { repondre, superUser } = commandeOptions;
+
+  if (!superUser) {
+    repondre('This command is only for the bot owner');
+    return;
+  }
+
   try {
     const services = await getServices();
     let message = "Available Services:\n\n";
@@ -43,7 +55,13 @@ adams({
   categorie: "Social", 
   reaction: "🛒"
 }, async (dest, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
+  const { repondre, arg, superUser } = commandeOptions;
+
+  if (!superUser) {
+    repondre('This command is only for the bot owner');
+    return;
+  }
+
   if (arg.length < 3) {
     return repondre("Usage: .smorder <service_id> <link> <quantity>");
   }
@@ -62,7 +80,13 @@ adams({
   categorie: "Social",
   reaction: "📊"
 }, async (dest, zk, commandeOptions) => {
-  const { repondre, arg } = commandeOptions;
+  const { repondre, arg, superUser } = commandeOptions;
+
+  if (!superUser) {
+    repondre('This command is only for the bot owner');
+    return;
+  }
+
   if (!arg[0]) {
     return repondre("Please provide an order ID");
   }
