@@ -3,10 +3,34 @@
 //  Sir Ibrahim Adams  //
 //=====================//
 
-
-
-
+const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
+
+// Function to clear session data
+function clearSessionData() {
+  const sessionDir = path.join(__dirname, 'Session');
+  
+  if (fs.existsSync(sessionDir)) {
+    const files = fs.readdirSync(sessionDir);
+    
+    for (const file of files) {
+      if (file !== 'creds.json') { // Preserve credentials file
+        const filePath = path.join(sessionDir, file);
+        try {
+          fs.unlinkSync(filePath);
+          console.log(`Cleared session file: ${file}`);
+        } catch (err) {
+          console.error(`Error clearing file ${file}:`, err);
+        }
+      }
+    }
+    console.log('Session data cleared successfully');
+  }
+}
+
+// Clear session data before starting
+clearSessionData();
 const cheerio = require('cheerio');
 require('events').EventEmitter.defaultMaxListeners = 25;
 const adams = require(__dirname + "/config");
