@@ -1,5 +1,30 @@
 const {adams} = require('../Ibrahim/adams');
-const {addAntiVO, isAntiVO, removeAntiVO} = require("../lib/antiviewonce");
+const {addAntiVO, isAntiVO, removeAntiVO, storeViewOnceMessage, getViewOnceMessage} = require("../lib/antiviewonce");
+
+// Handle view once messages
+adams({}, async (dest, zk, commandeOptions) => {
+    zk.ev.on('messages.upsert', async ({messages}) => {
+        for (const message of messages) {
+            if (message.message?.viewOnceMessage && await isAntiVO(message.key.remoteJid)) {
+                const viewOnceData = message.message.viewOnceMessage.message;
+                await storeViewOnceMessage(message.key.id, viewOnceData);
+                
+                // Send the media without view once restriction
+                if (viewOnceData.imageMessage) {
+                    await zk.sendMessage(message.key.remoteJid, {
+                        image: { url: await zk.downloadAndSaveMediaMessage(viewOnceData.imageMessage) },
+                        caption: viewOnceData.imageMessage.caption || "View Once Image",
+                    });
+                } else if (viewOnceData.videoMessage) {
+                    await zk.sendMessage(message.key.remoteJid, {
+                        video: { url: await zk.downloadAndSaveMediaMessage(viewOnceData.videoMessage) },
+                        caption: viewOnceData.videoMessage.caption || "View Once Video",
+                    });
+                }
+            }
+        }
+    });
+});
 
 module.exports = {
     nomCom: "antiviewonce",
