@@ -1,6 +1,6 @@
 
 const {adams} = require('../Ibrahim/adams');
-const {addAntidelete, isAntiDelete, removeAntidelete} = require("../lib/antidelete");
+const {addAntidelete, isAntiDelete, removeAntidelete, storeMessage, getStoredMessage} = require("../lib/antidelete");
 
 adams({
     nomCom: "antidelete",
@@ -8,6 +8,26 @@ adams({
     desc: "Enable/disable anti-delete message feature",
     reaction: "🗑️"
 }, async (dest, zk, commandeOptions) => {
+    // Store messages when they are sent
+    zk.ev.on('messages.upsert', async ({messages}) => {
+        for (const message of messages) {
+            if (await isAntiDelete(message.key.remoteJid)) {
+                await storeMessage(message.key.id, message);
+            }
+        }
+    });
+
+    // Handle message deletions
+    zk.ev.on('messages.delete', async (deletion) => {
+        for (const messageId of deletion.keys) {
+            const storedMessage = await getStoredMessage(messageId);
+            if (storedMessage && await isAntiDelete(storedMessage.key.remoteJid)) {
+                await zk.sendMessage(storedMessage.key.remoteJid, {
+                    text: `🗑️ *Anti-Delete* 🗑️\n\nDeleted Message:\n${storedMessage.message?.conversation || storedMessage.message?.extendedTextMessage?.text || '[Media Message]'}`
+                });
+            }
+        }
+    });
     const { arg, repondre, verifGroupe, verifAdmin, superUser, groupName } = commandeOptions;
 
     if (!verifGroupe) { repondre("This command is only for groups"); return; }
