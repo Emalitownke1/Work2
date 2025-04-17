@@ -3,10 +3,15 @@
 //  Sir Ibrahim Adams  //
 //=====================//
 
-const fs = require('fs');
-const path = require('path');
-const axios = require('axios');
-const { Pool } = require('pg'); // Added for PostgreSQL interaction
+import fs from 'fs';
+import path from 'path';
+import axios from 'axios';
+import { Pool } from 'pg';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename); // Added for PostgreSQL interaction
 const { initializeDatabase } = require('./Ibrahim/api/db'); // Assuming this file will contain DB setup
 
 // Function to clear session data
