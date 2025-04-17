@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node body.js",
     "dev": "node body.js",
-    "s": "node body.js", 
+    "s": "node body.js",
+    "install": "yarn install",
     "bwm": "pm2 start body.js --attach --max-memory-restart 490M",
     "c": "tsc"
   },
