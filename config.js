@@ -4,4 +4,4 @@ const adams = {
   // ... other config values
 };
 
-module.exports = adams;
+export default adams;
