@@ -1,0 +1,29 @@
+name: Extract ZIP to Main
+
+on:
+  workflow_dispatch:
+
+jobs:
+  unzip:
+    name: Extract Uploaded ZIP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip uploaded file
+        run: |
+          unzip -o Bwm-trekker-36eb19b7ddf9b133d1d383754469d8f9144d3043.zip -d .
+          rm Bwm-trekker-36eb19b7ddf9b133d1d383754469d8f9144d3043.zip
+
+      - name: Commit unzipped contents
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Extract and commit contents of uploaded ZIP" || echo "No changes to commit"
+
+      - name: Push changes
+        run: |
+          git push origin HEAD:main
