@@ -39,7 +39,7 @@ function clearSessionData() {
 
 // Clear session data before starting
 clearSessionData();
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import { EventEmitter } from 'events';
 import adams from './config.js';
 import http from 'http';
