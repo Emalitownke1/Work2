@@ -1,9 +1,9 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
 import { resolve } from 'path';
-const util = require("util")
-let BodyForm = require('form-data')
-let { fromBuffer } = require('file-type')
+import util from 'util';
+import BodyForm from 'form-data';
+import { fromBuffer } from 'file-type';
 //let fetch = require('node-fetch')
 let fs = require('fs')
 

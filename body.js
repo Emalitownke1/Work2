@@ -161,7 +161,7 @@ const pool = new Pool({ connectionString: SM_DB });
 
 
 async function startBwm() {
-  const { initializeDatabase } = require('./Ibrahim/api/db');
+  const { initializeDatabase } = await import('./Ibrahim/api/db.js');
   await initializeDatabase();
   fetchAdamsUrl();
 }
