@@ -6,7 +6,8 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
