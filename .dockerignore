@@ -8,3 +8,6 @@ yarn-error.log
 .env
 *.md
 Session/
+.github/
+.replit
+.config/
