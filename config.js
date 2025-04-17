@@ -1,5 +1,7 @@
 
-export default {
-  BWM_XMD: process.env.BWM_XMD || 'https://api.example.com'
-  // Add other config values here
+const adams = {
+  BWM_XMD: 'https://api.ibrahimadams.dev/xmd',  // Replace with your actual API endpoint
+  // ... other config values
 };
+
+module.exports = adams;
