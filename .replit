@@ -7,6 +7,7 @@ channel = "stable-24_05"
 
 [deployment]
 run = ["sh", "-c", "node body.js"]
+build = ["sh", "-c", "yarn install"]
 
 [[ports]]
 localPort = 8080
