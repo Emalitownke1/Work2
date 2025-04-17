@@ -33,10 +33,6 @@ function clearSessionData() {
 
 // Clear session data before starting
 clearSessionData();
-// Add delay before starting new session
-setTimeout(() => {
-  startBwm();
-}, 2000);
 const cheerio = require('cheerio');
 require('events').EventEmitter.defaultMaxListeners = 25;
 const adams = require(__dirname + "/config");
