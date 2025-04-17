@@ -5,7 +5,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
+import('axios').then(axiosModule => {
+  const axios = axiosModule.default;
+}).catch(err => console.error('Error loading axios:', err));
 const { Pool } = require('pg'); // Added for PostgreSQL interaction
 const { initializeDatabase } = require('./Ibrahim/api/db'); // Assuming this file will contain DB setup
 

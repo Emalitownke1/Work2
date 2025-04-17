@@ -1,4 +1,6 @@
-const axios = require('axios');
+import('axios').then(axiosModule => {
+  const axios = axiosModule.default;
+}).catch(err => console.error('Error loading axios:', err));
 const fs = require('fs');
 const { adams } = require("../Ibrahim/adams");
 const { writeFile } = require('fs/promises')

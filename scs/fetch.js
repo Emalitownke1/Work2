@@ -1,5 +1,7 @@
 const { adams } = require("../Ibrahim/adams");
-const { default :axios } = require("axios");
+import('axios').then(axiosModule => {
+  const axios = axiosModule.default;
+}).catch(err => console.error('Error loading axios:', err));
 const { mediafireDl } = require("../Ibrahim/dl/Function");
 
 adams({

@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 }
 Object.defineProperty(exports, "__esModule", { value: true })
 
-const axios = require("axios")
+import('axios').then(axiosModule => {
+  const axios = axiosModule.default;
+}).catch(err => console.error('Error loading axios:', err));
 const cheerio = require("cheerio")
 const { resolve } = require("path")
 const util = require("util")

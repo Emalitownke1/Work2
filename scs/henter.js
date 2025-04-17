@@ -1,7 +1,9 @@
 
 
 const {adams } = require("../Ibrahim/adams");
-const axios = require('axios');
+import('axios').then(axiosModule => {
+  const axios = axiosModule.default;
+}).catch(err => console.error('Error loading axios:', err));
 const cheerio = require('cheerio');
 let func = require('../Ibrahim/mesfonctions') ;
 let hdb = require('../lib/hentai') ;
