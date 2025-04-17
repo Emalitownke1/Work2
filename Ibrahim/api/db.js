@@ -1,5 +1,6 @@
 
-const { Pool } = require('pg');
+import pg from 'pg';
+const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: 'postgresql://postgres:zuzeIwLmEisQPsUkLmbBLkYxYXhIOLiT@crossover.proxy.rlwy.net:16749/railway'
@@ -32,4 +33,4 @@ async function initializeDatabase() {
   await pool.query(createTableQuery);
 }
 
-module.exports = { recordClaim, getAllClaims, initializeDatabase };
+export { recordClaim, getAllClaims, initializeDatabase };

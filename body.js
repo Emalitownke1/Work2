@@ -13,7 +13,7 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename); // Added for PostgreSQL interaction
-const { initializeDatabase } = require('./Ibrahim/api/db'); // Assuming this file will contain DB setup
+import { initializeDatabase } from './Ibrahim/api/db.js'; // Note the .js extension is required for ES modules
 
 // Function to clear session data
 function clearSessionData() {
