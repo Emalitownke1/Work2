@@ -39,14 +39,15 @@ function clearSessionData() {
 
 // Clear session data before starting
 clearSessionData();
-const cheerio = require('cheerio');
-require('events').EventEmitter.defaultMaxListeners = 25;
-const adams = require(__dirname + "/config");
+import cheerio from 'cheerio';
+import { EventEmitter } from 'events';
+import adams from './config.js';
+import http from 'http';
+import express from 'express';
 
+EventEmitter.defaultMaxListeners = 25;
 // Configure port for scale-to-zero support
 const PORT = process.env.PORT || 8080;
-const http = require('http');
-const express = require('express');
 const app = express();
 
 // Health check endpoints for scale-to-zero

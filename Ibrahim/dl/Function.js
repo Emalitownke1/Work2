@@ -1,13 +1,6 @@
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod }
-}
-Object.defineProperty(exports, "__esModule", { value: true })
-
-import('axios').then(axiosModule => {
-  const axios = axiosModule.default;
-}).catch(err => console.error('Error loading axios:', err));
-const cheerio = require("cheerio")
-const { resolve } = require("path")
+import axios from 'axios';
+import cheerio from 'cheerio';
+import { resolve } from 'path';
 const util = require("util")
 let BodyForm = require('form-data')
 let { fromBuffer } = require('file-type')
