@@ -44,47 +44,39 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
-// Replica management
-const MAX_REPLICAS = 2;
-const REPLICA_STARTUP_TIMEOUT = 5000; // 5 seconds max startup time
-let activeReplicas = 0;
-let isMainReplica = false;
+// Single instance optimization
+const COMMAND_TIMEOUT = 30000; // 30 seconds max command execution time
+let activeCommands = new Map();
 
-// Quick health check
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    replica: isMainReplica ? 'main' : 'worker',
-    healthy: true,
-    uptime: process.uptime()
-  });
-});
+// Command handler optimization
+async function handleCommand(command, timeout = COMMAND_TIMEOUT) {
+  const commandId = Date.now().toString();
 
-// Replica coordination
-async function initializeReplica() {
-  const startTime = Date.now();
-  
   try {
-    if (activeReplicas < MAX_REPLICAS) {
-      activeReplicas++;
-      isMainReplica = activeReplicas === 1;
-      
-      if (Date.now() - startTime > REPLICA_STARTUP_TIMEOUT) {
-        console.log('Replica startup exceeded timeout, terminating');
-        process.exit(1);
+    // Clear old commands
+    for (let [id, cmd] of activeCommands) {
+      if (Date.now() - parseInt(id) > timeout) {
+        activeCommands.delete(id);
       }
-      
-      console.log(`Replica initialized (${isMainReplica ? 'main' : 'worker'})`);
-    } else {
-      console.log('Max replicas reached, terminating');
-      process.exit(0);
     }
+
+    // Add new command
+    activeCommands.set(commandId, command);
+
+    // Prioritize newer commands
+    if (activeCommands.size > 10) { // Keep max 10 active commands
+      const oldestCmd = activeCommands.keys().next().value;
+      activeCommands.delete(oldestCmd);
+    }
+
+    console.log(`Processing command: ${command}`);
+    return true;
   } catch (error) {
-    console.error('Replica initialization failed:', error);
-    process.exit(1);
+    console.error('Command handling failed:', error);
+    return false;
   }
 }
 
-initializeReplica();
 
 // Health check endpoints for scale-to-zero
 app.get('/', (req, res) => {

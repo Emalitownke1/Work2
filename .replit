@@ -25,7 +25,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "node body.js"
+args = "node --expose-gc body.js"
 
 [env]
 REPLIT_DISABLE_PACKAGE_LAYER = "1"
