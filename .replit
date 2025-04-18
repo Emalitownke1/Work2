@@ -25,10 +25,6 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "yarn install --force"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
 args = "node body.js"
 
 [env]

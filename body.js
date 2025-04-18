@@ -44,6 +44,48 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
+// Replica management
+const MAX_REPLICAS = 2;
+const REPLICA_STARTUP_TIMEOUT = 5000; // 5 seconds max startup time
+let activeReplicas = 0;
+let isMainReplica = false;
+
+// Quick health check
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    replica: isMainReplica ? 'main' : 'worker',
+    healthy: true,
+    uptime: process.uptime()
+  });
+});
+
+// Replica coordination
+async function initializeReplica() {
+  const startTime = Date.now();
+  
+  try {
+    if (activeReplicas < MAX_REPLICAS) {
+      activeReplicas++;
+      isMainReplica = activeReplicas === 1;
+      
+      if (Date.now() - startTime > REPLICA_STARTUP_TIMEOUT) {
+        console.log('Replica startup exceeded timeout, terminating');
+        process.exit(1);
+      }
+      
+      console.log(`Replica initialized (${isMainReplica ? 'main' : 'worker'})`);
+    } else {
+      console.log('Max replicas reached, terminating');
+      process.exit(0);
+    }
+  } catch (error) {
+    console.error('Replica initialization failed:', error);
+    process.exit(1);
+  }
+}
+
+initializeReplica();
+
 // Health check endpoints for scale-to-zero
 app.get('/', (req, res) => {
   res.status(200).send('BWM XMD Bot Status: Online');
