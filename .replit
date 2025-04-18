@@ -21,11 +21,11 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "yarn install --force --network-timeout 600000 --no-optional"
+args = "yarn install --force"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "yarn start"
+args = "node body.js"
 
 [env]
 REPLIT_DISABLE_PACKAGE_LAYER = "1"
