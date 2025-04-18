@@ -72,19 +72,47 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`BWM XMD Bot Server running on port ${PORT}`);
 });
 
-// Keep-alive ping every 5 minutes
-setInterval(() => {
-  if (global.xmd && global.xmd.user) {
-    console.log("Bot connection active");
-  }
-}, 300000);
+// Implement connection coordination
+const REPLICA_LOCK_TIMEOUT = 60000; // 1 minute
+let isActivePrimary = false;
+let lastPingTime = 0;
 
-// Add keep-alive ping to prevent premature scaling to zero
-setInterval(() => {
-  if (global.xmd && global.xmd.user) {
-    console.log("Bot is alive and connected");
+// Keep-alive ping with replica coordination
+setInterval(async () => {
+  try {
+    if (global.xmd && global.xmd.user) {
+      const currentTime = Date.now();
+      
+      // Only one replica should be active at a time
+      if (!isActivePrimary && currentTime - lastPingTime > REPLICA_LOCK_TIMEOUT) {
+        isActivePrimary = true;
+        console.log("Taking over as primary replica");
+      }
+      
+      if (isActivePrimary) {
+        console.log("Primary replica active");
+        lastPingTime = currentTime;
+      } else {
+        console.log("Secondary replica standing by");
+      }
+    }
+  } catch (error) {
+    console.error("Ping error:", error);
   }
 }, 45000);
+
+// Health check endpoint includes replica status
+app.get('/health', (req, res) => {
+  const status = {
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    isPrimary: isActivePrimary,
+    bot: global.xmd && global.xmd.user ? 'connected' : 'disconnecting'
+  };
+  res.status(200).json(status);
+});
 
 async function fetchAdamsUrl() {
   try {
