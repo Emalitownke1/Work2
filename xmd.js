@@ -1,20 +1,49 @@
-
 // Increase max listeners limit
 require('events').EventEmitter.defaultMaxListeners = 50;
 
-// Cleanup existing sessions before connecting
+const fs = require('fs');
+
+// Cleanup function for WhatsApp sessions
 async function cleanupSessions() {
+  const sessionPaths = ['./.wwebjs_auth', './.wwebjs_cache', './Session'];
+  for (const path of sessionPaths) {
+    try {
+      if (fs.existsSync(path)) {
+        await fs.promises.rm(path, { recursive: true, force: true });
+        console.log(`Cleaned up ${path}`);
+      }
+    } catch (error) {
+      console.log(`Error cleaning ${path}:`, error.message);
+    }
+  }
+}
+
+// Connection lock
+let isConnecting = false;
+
+// Connection handler with lock
+async function connectWithLock() {
+  if (isConnecting) {
+    console.log('Connection attempt already in progress');
+    return;
+  }
+  isConnecting = true;
   try {
-    console.log('Cleaning up existing sessions...');
-    await require('fs').promises.rm('./.wwebjs_auth', { recursive: true, force: true });
-    await require('fs').promises.rm('./.wwebjs_cache', { recursive: true, force: true });
+    await cleanupSessions();
+    // Continue with connection -  This section needs to be filled in based on the original connect function.
+    // Placeholder for original connection logic.  Replace with the actual connection code.
+    console.log("Connection logic should be placed here");
+
   } catch (error) {
-    console.log('No existing sessions to clean');
+    console.error('Connection error:', error);
+  } finally {
+    isConnecting = false;
   }
 }
 
 // Initialize connection with cleanup
-cleanupSessions().catch(console.error);
+connectWithLock().catch(console.error);
+
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', {
