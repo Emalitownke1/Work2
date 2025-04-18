@@ -10,3 +10,19 @@ run = ["sh", "-c", "node body.js"]
 [[ports]]
 localPort = 8080
 externalPort = 80
+
+[workflows]
+runButton = "Run"
+
+[[workflows.workflow]]
+name = "Run"
+author = 40506544
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "yarn install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "yarn start"
