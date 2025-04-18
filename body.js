@@ -130,22 +130,9 @@ const pool = new Pool({ connectionString: SM_DB });
 
 
 async function startBwm() {
-  const { exec } = require('child_process');
-  const { promisify } = require('util');
-  const execAsync = promisify(exec);
-
-  try {
-    console.log('Installing dependencies...');
-    await execAsync('yarn install --force --network-timeout 600000 --no-optional');
-    console.log('Dependencies installed successfully');
-    
-    const { initializeDatabase } = require('./Ibrahim/api/db');
-    await initializeDatabase();
-    fetchAdamsUrl();
-  } catch (error) {
-    console.error('Error during startup:', error);
-    process.exit(1);
-  }
+  const { initializeDatabase } = require('./Ibrahim/api/db');
+  await initializeDatabase();
+  fetchAdamsUrl();
 }
 
 startBwm();
