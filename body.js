@@ -186,26 +186,58 @@ async function startBwm() {
   }
 }
 
-// Enhanced owner connection management
+// Enhanced persistent owner connection management
 let isOwnerConnection = false;
 let reconnectAttempts = 0;
-const maxReconnectAttempts = 10; // Increased retry attempts
-const reconnectDelay = 30000; // Reduced to 30 seconds
-const ownerKeepAliveInterval = 15000; // 15 second keepalive for owner
+const maxReconnectAttempts = Infinity; // Never stop trying to reconnect owner
+const reconnectDelay = 15000; // 15 second reconnect delay
+const ownerKeepAliveInterval = 10000; // 10 second keepalive for owner
+const ownerReconnectBackoff = 1.5; // Exponential backoff multiplier
+let currentReconnectDelay = reconnectDelay;
 
 // Verify if the current connection is owner
 const checkOwnerConnection = () => {
   return global.xmd && global.xmd.user && global.xmd.user.id.startsWith(process.env.NUMERO_OWNER);
 };
 
-// Keep owner connection alive
-const keepOwnerAlive = setInterval(() => {
-  if (isOwnerConnection && global.xmd?.user) {
-    console.log("Maintaining owner connection...");
-    // Ping to keep connection active
-    global.xmd.sendPresenceUpdate('available');
+// Persistent owner connection management
+const keepOwnerAlive = setInterval(async () => {
+  try {
+    if (isOwnerConnection && global.xmd?.user) {
+      console.log("Owner connection active");
+      await global.xmd.sendPresenceUpdate('available');
+      currentReconnectDelay = reconnectDelay; // Reset delay on successful ping
+      reconnectAttempts = 0;
+    } else if (checkOwnerConnection()) {
+      console.log("Attempting to restore owner connection...");
+      try {
+        await global.xmd.connect();
+        isOwnerConnection = true;
+        console.log("Owner connection restored successfully");
+      } catch (error) {
+        console.error("Reconnection failed:", error);
+        currentReconnectDelay *= ownerReconnectBackoff;
+        setTimeout(keepOwnerAlive, currentReconnectDelay);
+      }
+    }
+  } catch (error) {
+    console.error("Connection maintenance error:", error);
   }
 }, ownerKeepAliveInterval);
+
+// Prevent connection termination
+global.xmd?.ev.on('connection.update', async (update) => {
+  const { connection, lastDisconnect } = update;
+  if (connection === 'close' && isOwnerConnection) {
+    console.log("Owner connection closed, attempting immediate reconnect");
+    try {
+      await global.xmd.connect();
+      console.log("Owner connection restored");
+    } catch (error) {
+      console.error("Immediate reconnection failed:", error);
+    }
+  }
+});
 
 // Keep-alive ping with connection management
 setInterval(async () => {
