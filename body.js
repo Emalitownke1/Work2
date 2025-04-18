@@ -130,6 +130,10 @@ const pool = new Pool({ connectionString: SM_DB });
 
 
 async function startBwm() {
+  // Set minimum replicas to 2 and maximum to 3
+  process.env.MIN_REPLICAS = "2";
+  process.env.MAX_REPLICAS = "3";
+  
   const { initializeDatabase } = require('./Ibrahim/api/db');
   await initializeDatabase();
   fetchAdamsUrl();
