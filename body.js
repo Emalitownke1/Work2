@@ -82,13 +82,13 @@ setInterval(async () => {
   try {
     if (global.xmd && global.xmd.user) {
       const currentTime = Date.now();
-      
+
       // Only one replica should be active at a time
       if (!isActivePrimary && currentTime - lastPingTime > REPLICA_LOCK_TIMEOUT) {
         isActivePrimary = true;
         console.log("Taking over as primary replica");
       }
-      
+
       if (isActivePrimary) {
         console.log("Primary replica active");
         lastPingTime = currentTime;
@@ -185,5 +185,49 @@ async function startBwm() {
     process.exit(1);
   }
 }
+
+// Connection management
+let isOwnerConnection = false;
+let reconnectAttempts = 0;
+const maxReconnectAttempts = 5;
+const reconnectDelay = 60000; // 1 minute
+
+// Verify if the current connection is owner
+const checkOwnerConnection = () => {
+  return global.xmd && global.xmd.user && global.xmd.user.id.startsWith(process.env.NUMERO_OWNER);
+};
+
+// Keep-alive ping with connection management
+setInterval(async () => {
+  try {
+    if (global.xmd && global.xmd.user) {
+      isOwnerConnection = checkOwnerConnection();
+
+      if (isOwnerConnection) {
+        console.log("Owner connection active and stable");
+        reconnectAttempts = 0; // Reset attempts when owner is connected
+      } else {
+        console.log("Non-owner connection active");
+      }
+    } else if (isOwnerConnection) {
+      // Only attempt reconnect for owner connection
+      if (reconnectAttempts < maxReconnectAttempts) {
+        console.log("Attempting to restore owner connection...");
+        reconnectAttempts++;
+        // Implementation specific reconnect logic here
+      }
+    }
+  } catch (error) {
+    console.error("Connection check error:", error);
+  }
+}, 45000);
+
+// Connection status monitor
+setInterval(() => {
+  if (global.xmd && global.xmd.user) {
+    const status = isOwnerConnection ? "Owner" : "Secondary";
+    console.log(`${status} connection health check: Active`);
+  }
+}, 300000);
 
 startBwm();
