@@ -130,13 +130,32 @@ const pool = new Pool({ connectionString: SM_DB });
 
 
 async function startBwm() {
-  // Set minimum replicas to 2 and maximum to 3
-  process.env.MIN_REPLICAS = "2";
-  process.env.MAX_REPLICAS = "3";
-  
-  const { initializeDatabase } = require('./Ibrahim/api/db');
-  await initializeDatabase();
-  fetchAdamsUrl();
+  try {
+    // Add delay between replica starts to prevent connection conflicts
+    const replicaDelay = Math.random() * 5000; // Random delay up to 5 seconds
+    await new Promise(resolve => setTimeout(resolve, replicaDelay));
+
+    const { initializeDatabase } = require('./Ibrahim/api/db');
+    await initializeDatabase();
+
+    // Implement connection retry with backoff
+    let retries = 0;
+    const maxRetries = 3;
+
+    while (retries < maxRetries) {
+      try {
+        await fetchAdamsUrl();
+        break;
+      } catch (error) {
+        retries++;
+        console.log(`Connection attempt ${retries} failed, retrying in ${retries * 2} seconds...`);
+        await new Promise(resolve => setTimeout(resolve, retries * 2000));
+      }
+    }
+  } catch (error) {
+    console.error('Fatal startup error:', error);
+    process.exit(1);
+  }
 }
 
 startBwm();
