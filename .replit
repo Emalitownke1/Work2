@@ -26,3 +26,7 @@ args = "yarn install"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "yarn start"
+
+[env]
+REPLIT_DISABLE_PACKAGE_LAYER = "1"
+REPLIT_KEEP_PACKAGE_DEV_DEPENDENCIES = "1"
