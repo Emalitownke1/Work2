@@ -21,7 +21,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "yarn install"
+args = "yarn install --registry https://registry.npmjs.org --network-timeout 100000"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
