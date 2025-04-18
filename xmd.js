@@ -2,6 +2,20 @@
 // Increase max listeners limit
 require('events').EventEmitter.defaultMaxListeners = 50;
 
+// Cleanup existing sessions before connecting
+async function cleanupSessions() {
+  try {
+    console.log('Cleaning up existing sessions...');
+    await require('fs').promises.rm('./.wwebjs_auth', { recursive: true, force: true });
+    await require('fs').promises.rm('./.wwebjs_cache', { recursive: true, force: true });
+  } catch (error) {
+    console.log('No existing sessions to clean');
+  }
+}
+
+// Initialize connection with cleanup
+cleanupSessions().catch(console.error);
+
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', {
     message: err.message,
