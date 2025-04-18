@@ -186,16 +186,26 @@ async function startBwm() {
   }
 }
 
-// Connection management
+// Enhanced owner connection management
 let isOwnerConnection = false;
 let reconnectAttempts = 0;
-const maxReconnectAttempts = 5;
-const reconnectDelay = 60000; // 1 minute
+const maxReconnectAttempts = 10; // Increased retry attempts
+const reconnectDelay = 30000; // Reduced to 30 seconds
+const ownerKeepAliveInterval = 15000; // 15 second keepalive for owner
 
 // Verify if the current connection is owner
 const checkOwnerConnection = () => {
   return global.xmd && global.xmd.user && global.xmd.user.id.startsWith(process.env.NUMERO_OWNER);
 };
+
+// Keep owner connection alive
+const keepOwnerAlive = setInterval(() => {
+  if (isOwnerConnection && global.xmd?.user) {
+    console.log("Maintaining owner connection...");
+    // Ping to keep connection active
+    global.xmd.sendPresenceUpdate('available');
+  }
+}, ownerKeepAliveInterval);
 
 // Keep-alive ping with connection management
 setInterval(async () => {
