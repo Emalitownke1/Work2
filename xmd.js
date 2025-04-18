@@ -1,4 +1,7 @@
 
+// Increase max listeners limit
+require('events').EventEmitter.defaultMaxListeners = 50;
+
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', {
     message: err.message,
