@@ -1,0 +1,27 @@
+name: Move Unzipped Folder Contents to Root
+
+on:
+  workflow_dispatch:
+
+jobs:
+  move:
+    name: Move Folder Contents to Root
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Move contents to root
+        run: |
+          mv -n Bwm-trekker-36eb19b7ddf9b133d1d383754469d8f9144d3043/* .
+          rm -rf Bwm-trekker-36eb19b7ddf9b133d1d383754469d8f9144d3043
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Move unzipped folder contents to repo root" || echo "No changes to commit"
+      - name: Push to main branch
+        run: |
+          git push origin HEAD:main
