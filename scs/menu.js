@@ -60,9 +60,9 @@ ${theme.border[2]}${theme.separator}\n\n`;
     let cmdCount = 1;
     for (const [category, commands] of Object.entries(coms)) {
         menuMessage += `${theme.border[0]}『 *${category}* 』\n`;
-        commands.forEach(cmd => {
-            menuMessage += `${theme.border[1]}${numberStyle(cmdCount)} ${cmd}\n`;
-            cmdCount++;
+        commands.forEach((cmd, index) => {
+            const num = cmdCount++;
+            menuMessage += `${theme.border[1]}${num}${theme.bullet} ${cmd.replace('│ ⌁ ', '')}\n`;
         });
         menuMessage += `${theme.border[2]}${theme.separator}\n\n`;
     }
