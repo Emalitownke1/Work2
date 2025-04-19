@@ -11,26 +11,48 @@ adams({ nomCom: "menu", categorie: "General", reaction: "📋" }, async (dest, z
     cm.map((com) => {
         if (!coms[com.categorie]) 
             coms[com.categorie] = [];
-        coms[com.categorie].push(com.nomCom);
+        coms[com.categorie].push('│ ⌁ ' + com.nomCom);
     });
 
-    coms['AI & Fun'] = [
-        '🟢 gpt3',
-        '🟢 gemini', 
-        '🟢 randomwallpaper',
-        '🟢 random',
-        '🟢 applenews',
-        '🟢 nasanews',
-        '🟢 population'
+    // Main command categories
+    coms['AI & ChatBot'] = [
+        '│ ⌁ gpt3',
+        '│ ⌁ gemini',
+        '│ ⌁ dalle',
+        '│ ⌁ chatgpt',
+        '│ ⌁ bard'
     ];
 
-    let menuMessage = "*📋 COMMAND MENU 📋*\n\n";
+    coms['Media & Tools'] = [
+        '│ ⌁ randomwallpaper',
+        '│ ⌁ applenews',
+        '│ ⌁ nasanews',
+        '│ ⌁ population',
+        '│ ⌁ sticker',
+        '│ ⌁ photo'
+    ];
+
+    let menuMessage = `
+╭––『 *TREKKER-MD* 』
+│
+│ ⌬ User: @${dest.split('@')[0]}
+│ ⌬ Bot: TREKKER-MD
+│ ⌬ Time: ${moment().format('HH:mm:ss')}
+│ ⌬ Date: ${moment().format('DD/MM/YYYY')}
+╰────────────────╮\n\n`;
+
     for (const [category, commands] of Object.entries(coms)) {
-        menuMessage += `*${category} Commands*\n`;
-        menuMessage += commands.join('\n') + '\n\n';
+        menuMessage += `╭––『 *${category}* 』\n`;
+        menuMessage += commands.join('\n') + '\n';
+        menuMessage += `╰────────────────╯\n\n`;
     }
 
-    let footerText = "Made by Ibrahim Adams";
+    menuMessage += `╭––『 *Note* 』
+│ Use .help <command> for 
+│ detailed command info
+╰────────────────╯`;
+
+    let footerText = "TREKKER-MD • Powered by Ibrahim Adams";
     const lien = mybotpic();
     
     if (lien.match(/\.(mp4|gif)$/i)) {
