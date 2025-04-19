@@ -32,6 +32,14 @@ adams({ nomCom: "menu", categorie: "General", reaction: "📋" }, async (dest, z
         '│ ⌁ photo'
     ];
 
+    coms['Social Media Tools'] = [
+        '│ ⌁ smbalance - Check account balance',
+        '│ ⌁ smservices - List all services',
+        '│ ⌁ smorder - Place new order',
+        '│ ⌁ smstatus - Check order status',
+        '│ ⌁ freelikes - Free Instagram likes'
+    ];
+
     let menuMessage = `
 ╭––『 *TREKKER-MD* 』
 │
