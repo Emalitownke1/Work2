@@ -53,21 +53,11 @@ adams({ nomCom: "menu", categorie: "General", reaction: "📋" }, async (dest, z
 ╰────────────────╯`;
 
     let footerText = "TREKKER-MD • Powered by Ibrahim Adams";
-    const lien = mybotpic();
+    const imageUrl = "https://i.postimg.cc/0Nrf4fxL/IMG-20250419-131400-618.jpg";
     
-    if (lien.match(/\.(mp4|gif)$/i)) {
-        zk.sendMessage(dest, { 
-            video: { url: lien }, 
-            caption: menuMessage, 
-            footer: footerText 
-        }, { quoted: ms });
-    } else if (lien.match(/\.(jpeg|png|jpg)$/i)) {
-        zk.sendMessage(dest, { 
-            image: { url: lien }, 
-            caption: menuMessage, 
-            footer: footerText 
-        }, { quoted: ms });
-    } else {
-        repondre(menuMessage);
-    }
+    zk.sendMessage(dest, { 
+        image: { url: imageUrl }, 
+        caption: menuMessage, 
+        footer: footerText 
+    }, { quoted: ms });
 });
