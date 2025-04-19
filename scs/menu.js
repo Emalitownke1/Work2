@@ -1,7 +1,8 @@
 
 const { adams } = require('../Ibrahim/adams'); const moment = require('moment-timezone'); const s = require(__dirname + '/../config');
 
-adams({ nomCom: "menu", categorie: "General", reaction: "📋" }, async (dest, zk, commandeOptions) => { const { ms, repondre, mybotpic } = commandeOptions; const { cm } = require(__dirname + '/../Ibrahim/adams');
+const commandPrefix = s.PREFIX || ".";
+adams({ nomCom: commandPrefix + "menu", categorie: "General", reaction: "📋" }, async (dest, zk, commandeOptions) => { const { ms, repondre, mybotpic } = commandeOptions; const { cm } = require(__dirname + '/../Ibrahim/adams');
 
 var coms = {}; cm.map((com) => { if (!coms[com.categorie]) coms[com.categorie] = []; coms[com.categorie].push(com.nomCom); });
 
