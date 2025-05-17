@@ -198,7 +198,14 @@ async function startBwm() {
     const replicaDelay = Math.random() * 5000; // Random delay up to 5 seconds
     await new Promise(resolve => setTimeout(resolve, replicaDelay));
 
-    const { initializeDatabase } = require('./Ibrahim/api/db');
+    const { initializeDatabase, checkDatabaseConnection } = require('./Ibrahim/api/db');
+    
+    // Check database connection first
+    console.log('Checking database connection...');
+    await checkDatabaseConnection();
+    console.log('Database connection successful');
+    
+    // Initialize database
     await initializeDatabase();
 
     // Implement connection retry with backoff
