@@ -14,10 +14,10 @@ jobs:
           ref: main
           persist-credentials: true
 
-      - name: Remove all files except .github
+      - name: Remove all files except .github and .git
         run: |
           shopt -s extglob dotglob
-          rm -rf !(.github)
+          rm -rf !(.git|.github)
           echo "# Main branch cleared" > README.md
 
       - name: Re-add preserved and new files
