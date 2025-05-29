@@ -14,16 +14,14 @@ jobs:
           ref: main
           persist-credentials: true
 
-      - name: Remove all files except .github and .git
+      - name: Remove all tracked files
         run: |
-          shopt -s extglob dotglob
-          rm -rf !(.git|.github)
+          git rm -rf .
           echo "# Main branch cleared" > README.md
-
-      - name: Re-add preserved and new files
+          git add README.md
+      - name: Commit and push changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add .
-          git commit -m "Clear main branch but keep .github"
+          git commit -m "Clear main branch"
           git push origin main
